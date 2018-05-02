@@ -6,6 +6,7 @@ namespace App\Command;
 
 //use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,14 +34,16 @@ class DeleteStaleProfiles extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $outputStyle = new OutputFormatterStyle('white', 'blue', array('bold'));
+        $output->getFormatter()->setStyle('title', $outputStyle);
+
         $output->writeln([
-            'Deleting stale profiles',
+            '<title>Deleting stale profiles</title>',
             '============',
             '',
         ]);
-        $output->write('Delete every profiles without');
-        $output->writeln(' any connection within a given period.');
-
-        $output->writeln('The period of staleness is: '.$input->getArgument('period'));
+        $output->writeln('<comment>Delete every profiles without any connection within a given period.</comment>');
+        $output->writeln('<info>The period of staleness is: '.$input->getArgument('period').'</info>');
+        $output->writeln('<question>Are you sure ?</question>');
     }
 }
