@@ -8,6 +8,7 @@ namespace App\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -121,6 +122,21 @@ class DeleteStaleProfiles extends Command
             return 0;
         }
 
+        $progressBar = new ProgressBar($output);
+
+        $i = 0;
+        while ($i++ < 5) {
+            // ... do some work
+            sleep(1);
+
+            // advances the progress bar 1 unit
+            $progressBar->advance();
+
+            // you can also advance the progress bar by more than 1 unit
+            //$progressBar->advance(9);
+        }
+
+        $progressBar->finish();
         $output->writeln('<info>Ok done!</info>');
 
         // you can force manual release but symfony does it for you when the command end
