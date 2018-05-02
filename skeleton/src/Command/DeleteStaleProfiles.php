@@ -122,7 +122,7 @@ class DeleteStaleProfiles extends Command
             return 0;
         }
 
-        $progressBar = new ProgressBar($output);
+        $progressBar = new ProgressBar($output, 5);
 
         $i = 0;
         while ($i++ < 5) {
