@@ -15,6 +15,7 @@ class RequestCollector extends DataCollector
         $this->data = array(
             'method' => $request->getMethod(),
             'acceptable_content_types' => $request->getAcceptableContentTypes(),
+            'adverts' => ['AXA', 'Babbel', 'Leroy Merlin'],
         );
     }
 
@@ -40,6 +41,6 @@ class RequestCollector extends DataCollector
 
     public function getLoadedAdverts()
     {
-        return ['AXA', 'Babbel', 'Leroy Merlin'];
+        return $this->data['adverts'];
     }
 }
