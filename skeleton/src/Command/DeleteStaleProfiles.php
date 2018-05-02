@@ -74,14 +74,18 @@ class DeleteStaleProfiles extends Command
         $question = new Question('This command is restricted, what is the admin password?');
         $question->setHidden(true);
         $question->setHiddenFallback(false);
+        $question->setValidator(function ($answer) {
+            if ('<3 rick astley' !== $answer) {
+                throw new \RuntimeException(
+                    'Access refused, please try again.'
+                );
+            }
 
-        $password = $helper->ask($input, $output, $question);
+            return $answer;
+        });
+        $question->setMaxAttempts(2);
 
-        if ('<3 rick astley' !== $password) {
-            $output->writeln('Access refused.');
-
-            return 0;
-        }
+        $helper->ask($input, $output, $question);
 
         if (null === $period = $input->getArgument('period')) {
             $helper = $this->getHelper('question');
