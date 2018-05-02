@@ -29,6 +29,12 @@ class DeleteStaleProfiles extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // ...
+        $output->writeln([
+            'Deleting stale profiles',
+            '============',
+            '',
+        ]);
+        $output->write('Delete every profiles without');
+        $output->write(' any connection within a given period.');
     }
 }
