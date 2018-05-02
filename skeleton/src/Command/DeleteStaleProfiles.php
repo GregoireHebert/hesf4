@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 //class DeleteStaleProfiles extends ContainerAwareCommand
 class DeleteStaleProfiles extends Command
@@ -38,7 +39,7 @@ class DeleteStaleProfiles extends Command
             // Adds an option
             ->addOption(
                 'force-all',
-                'fa',
+                'a',
                 InputOption::VALUE_NONE,
                 'Should we also force to delete even the admin / super-admin users'
             );
@@ -71,8 +72,14 @@ class DeleteStaleProfiles extends Command
             $output->writeln('<info>Even the admin will be deleted !</info>');
         }
 
-        $output->writeln('<question>Are you sure ?</question>');
+        $helper = $this->getHelper('question');
+        $question = new ConfirmationQuestion('Are you sure?', false);
 
+        if (!$helper->ask($input, $output, $question)) {
+            return 0;
+        }
+
+        $output->writeln('<info>Ok done!</info>');
 
         // you can force manual release but symfony does it for you when the command end
         $this->release();

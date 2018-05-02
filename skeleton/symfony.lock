@@ -68,6 +68,9 @@
     "symfony/http-kernel": {
         "version": "v4.0.9"
     },
+    "symfony/lock": {
+        "version": "v4.0.9"
+    },
     "symfony/lts": {
         "version": "4-dev"
     },
