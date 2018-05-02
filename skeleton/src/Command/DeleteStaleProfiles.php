@@ -123,6 +123,7 @@ class DeleteStaleProfiles extends Command
         }
 
         $progressBar = new ProgressBar($output, 5);
+        $progressBar->setFormat('debug');
 
         $i = 0;
         while ($i++ < 5) {
