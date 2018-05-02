@@ -9,6 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 //class DeleteStaleProfiles extends ContainerAwareCommand
@@ -27,8 +28,17 @@ class DeleteStaleProfiles extends Command
             // the "--help" option
             ->setHelp('This command should be used at least once a week. If a profile is deleted, remember the user has had warnings.')
 
-            // ask for an argument. It can be optional or required.
+            // ask for an argument. It can be optional or required or even is Array. You can combine the two .
+            // ->addArgument('profiles',  InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Specific profiles to delete (ask for a user id')
             ->addArgument('period', InputArgument::OPTIONAL, 'The amount of time', '1 year')
+
+            // Adds an option
+            ->addOption(
+                'force-all',
+                'fa',
+                InputOption::VALUE_NONE,
+                'Should we also force to delete even the admin / super-admin users'
+            );
         ;
     }
 
@@ -44,6 +54,11 @@ class DeleteStaleProfiles extends Command
         ]);
         $output->writeln('<comment>Delete every profiles without any connection within a given period.</comment>');
         $output->writeln('<info>The period of staleness is: '.$input->getArgument('period').'</info>');
+
+        if ($input->getOption('force-all')) {
+            $output->writeln('<info>Even the admin will be deleted !</info>');
+        }
+
         $output->writeln('<question>Are you sure ?</question>');
     }
 }
