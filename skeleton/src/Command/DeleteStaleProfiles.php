@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 //class DeleteStaleProfiles extends ContainerAwareCommand
@@ -71,6 +72,17 @@ class DeleteStaleProfiles extends Command
         if ($input->getOption('force-all')) {
             $output->writeln('<info>Even the admin will be deleted !</info>');
         }
+
+        $helper = $this->getHelper('question');
+        $question = new ChoiceQuestion(
+            'Please select the profiles you want to clean (any by default)',
+            array('any', 'standard', 'premium', 'gold'),
+            0
+        );
+        $question->setErrorMessage('Profile %s is invalid.');
+
+        $profile = $helper->ask($input, $output, $question);
+        $output->writeln('You selected: "'.$profile. '" profiles to be cleaned.');
 
         $helper = $this->getHelper('question');
         $question = new ConfirmationQuestion('Are you sure?', false);
