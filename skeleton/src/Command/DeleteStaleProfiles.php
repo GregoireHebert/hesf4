@@ -6,6 +6,7 @@ namespace App\Command;
 
 //use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,6 +16,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 //class DeleteStaleProfiles extends ContainerAwareCommand
 class DeleteStaleProfiles extends Command
 {
+    use LockableTrait;
+
     protected function configure()
     {
         $this
@@ -44,6 +47,12 @@ class DeleteStaleProfiles extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (!$this->lock()) {
+            $output->writeln('The command is already running in another process.');
+
+            return 0;
+        }
+
         $outputStyle = new OutputFormatterStyle('white', 'blue', array('bold'));
         $output->getFormatter()->setStyle('title', $outputStyle);
 
