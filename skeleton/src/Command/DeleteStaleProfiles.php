@@ -9,6 +9,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -146,6 +148,22 @@ class DeleteStaleProfiles extends Command
 
         $progressBar->finish();
         $output->writeln('<info>Ok done!</info>');
+
+        $table = new Table($output);
+        $table
+            ->setHeaders([
+                [new TableCell('Cleaning results', ['colspan' => 2])],
+                ['Username', 'Deleted']
+            ])
+            ->setRows([
+                ['Greg', false],
+                ['Jo', false],
+                ['Ki', true],
+                ['Hi', true],
+                ['Donald', false],
+            ])
+        ;
+        $table->render();
 
         // you can force manual release but symfony does it for you when the command end
         $this->release();
