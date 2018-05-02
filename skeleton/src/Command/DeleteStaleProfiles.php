@@ -122,8 +122,12 @@ class DeleteStaleProfiles extends Command
             return 0;
         }
 
+        ProgressBar::setFormatDefinition('custom', ' %current%/%max% -- %message%');
         $progressBar = new ProgressBar($output, 5);
-        $progressBar->setFormat('debug');
+        $progressBar->setFormat('custom');
+
+        $progressBar->setMessage('Start the cleaning');
+        sleep(1);
 
         $i = 0;
         while ($i++ < 5) {
@@ -131,6 +135,7 @@ class DeleteStaleProfiles extends Command
             sleep(1);
 
             // advances the progress bar 1 unit
+            $progressBar->setMessage("Cleaning in progress...$i users deleted.");
             $progressBar->advance();
 
             // you can also advance the progress bar by more than 1 unit
