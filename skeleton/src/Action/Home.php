@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Controller;
+namespace App\Action;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class HomeController extends Controller
+class Home
 {
     /**
-     * @Route("/home", name="home")
+     * @Route("/", name="home")
      */
-    public function index()
+    public function __invoke()
     {
-        return $this->json([
+        return new JsonResponse([
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Controller/HomeController.php',
         ]);
