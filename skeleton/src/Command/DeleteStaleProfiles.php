@@ -75,14 +75,15 @@ class DeleteStaleProfiles extends Command
 
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
-            'Please select the profiles you want to clean (any by default)',
-            array('any', 'standard', 'premium', 'gold'),
-            0
+            'Please select the profiles you want to clean (all by default)',
+            array('standard', 'premium', 'gold'),
+            '0,1,2'
         );
         $question->setErrorMessage('Profile %s is invalid.');
+        $question->setMultiselect(true);
 
         $profile = $helper->ask($input, $output, $question);
-        $output->writeln('You selected: "'.$profile. '" profiles to be cleaned.');
+        $output->writeln('You selected: "'.implode(', ', $profile). '" profiles to be cleaned.');
 
         $helper = $this->getHelper('question');
         $question = new ConfirmationQuestion('Are you sure?', false);
