@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
 
 //class DeleteStaleProfiles extends ContainerAwareCommand
 class DeleteStaleProfiles extends Command
@@ -35,7 +36,7 @@ class DeleteStaleProfiles extends Command
 
             // ask for an argument. It can be optional or required or even is Array. You can combine the two .
             // ->addArgument('profiles',  InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Specific profiles to delete (ask for a user id')
-            ->addArgument('period', InputArgument::OPTIONAL, 'The amount of time', '1 year')
+            ->addArgument('period', InputArgument::OPTIONAL, 'The amount of time')
 
             // Adds an option
             ->addOption(
@@ -67,7 +68,16 @@ class DeleteStaleProfiles extends Command
             '',
         ]);
         $output->writeln('<comment>Delete every profiles without any connection within a given period.</comment>');
-        $output->writeln('<info>The period of staleness is: '.$input->getArgument('period').'</info>');
+        if (null === $period = $input->getArgument('period')) {
+            $helper = $this->getHelper('question');
+
+            $periods = array('1 year', '6 months', '1 month', '2 weeks');
+            $question = new Question('Please provide a staleness period.', 'year');
+            $question->setAutocompleterValues($periods);
+
+            $period = $helper->ask($input, $output, $question);
+        }
+        $output->writeln("<info>The period of staleness is: $period</info>");
 
         if ($input->getOption('force-all')) {
             $output->writeln('<info>Even the admin will be deleted !</info>');
