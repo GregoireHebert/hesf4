@@ -68,6 +68,21 @@ class DeleteStaleProfiles extends Command
             '',
         ]);
         $output->writeln('<comment>Delete every profiles without any connection within a given period.</comment>');
+
+        $helper = $this->getHelper('question');
+
+        $question = new Question('This command is restricted, what is the admin password?');
+        $question->setHidden(true);
+        $question->setHiddenFallback(false);
+
+        $password = $helper->ask($input, $output, $question);
+
+        if ('<3 rick astley' !== $password) {
+            $output->writeln('Access refused.');
+
+            return 0;
+        }
+
         if (null === $period = $input->getArgument('period')) {
             $helper = $this->getHelper('question');
 
