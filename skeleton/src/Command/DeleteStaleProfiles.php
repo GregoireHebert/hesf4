@@ -6,6 +6,7 @@ namespace App\Command;
 
 //use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -19,11 +20,14 @@ class DeleteStaleProfiles extends Command
             ->setName('app:profile:delete-stale')
 
             // the short description shown while running "php bin/console list"
-            ->setDescription('Delete every profiles without any connection within 1 year.')
+            ->setDescription('Delete every profiles without any connection within a period (default: "1 year").')
 
             // the full command description shown when running the command with
             // the "--help" option
             ->setHelp('This command should be used at least once a week. If a profile is deleted, remember the user has had warnings.')
+
+            // ask for an argument. It can be optional or required.
+            ->addArgument('period', InputArgument::OPTIONAL, 'The amount of time', '1 year')
         ;
     }
 
@@ -35,6 +39,8 @@ class DeleteStaleProfiles extends Command
             '',
         ]);
         $output->write('Delete every profiles without');
-        $output->write(' any connection within a given period.');
+        $output->writeln(' any connection within a given period.');
+
+        $output->writeln('The period of staleness is: '.$input->getArgument('period'));
     }
 }
