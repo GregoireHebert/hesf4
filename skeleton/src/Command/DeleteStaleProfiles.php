@@ -53,6 +53,9 @@ class DeleteStaleProfiles extends Command
             return 0;
         }
 
+        // If you prefer to wait until the lock is released, use this:
+        // $this->lock(null, true);
+
         $outputStyle = new OutputFormatterStyle('white', 'blue', array('bold'));
         $output->getFormatter()->setStyle('title', $outputStyle);
 
@@ -69,5 +72,9 @@ class DeleteStaleProfiles extends Command
         }
 
         $output->writeln('<question>Are you sure ?</question>');
+
+
+        // you can force manual release but symfony does it for you when the command end
+        $this->release();
     }
 }
