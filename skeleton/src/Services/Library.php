@@ -3,16 +3,21 @@
 declare(strict_types=1);
 
 namespace App\Services;
+use Psr\Log\LoggerInterface;
 
 /**
  * @author Grégoire Hébert <gregoire@les-tilleuls.coop>
  */
 class Library
 {
-    // this is a service because autowiring automatically register it.
-    // run docker-compose exec app bin/console debug:container Library
+    private $logger;
+    private $stringArg;
 
-    // now run docker-compose exec app bin/console debug:autowiring
+    public function __construct(LoggerInterface $logger, $stringArg)
+    {
+        $this->logger = $logger;
+        $this->stringArg = $stringArg;
+    }
 
     public function takeBook()
     {
@@ -22,6 +27,9 @@ class Library
             'Tintin - les 7 boules de cristal',
         ];
 
-        return $books[array_rand($books)];
+        $book = $books[array_rand($books)];
+        $this->logger->notice("borrowed book $book");
+
+        return $book;
     }
 }
