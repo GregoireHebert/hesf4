@@ -2,6 +2,7 @@
 
 namespace App\Action;
 
+use App\Services\Library;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
@@ -10,10 +11,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class Home
 {
     private $profiler;
+    private $book;
 
-    public function __construct(Profiler $profiler)
+    public function __construct(Profiler $profiler, Library $library)
     {
         $this->profiler = $profiler;
+        $this->book = $library->takeBook();
     }
 
     /**
@@ -24,6 +27,7 @@ class Home
         return new JsonResponse([
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Action/HomeController.php',
+            'book' => $this->book,
         ]);
     }
 
