@@ -10,38 +10,34 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Home
 {
-    private $profiler;
-    private $book;
-
-    public function __construct(Profiler $profiler, Library $library)
-    {
-        $this->profiler = $profiler;
-        $this->book = $library->takeBook();
-    }
-
     /**
      * @Route("/", name="home")
+     * @param Library $library
+     * @return JsonResponse
      */
-    public function __invoke()
+    public function __invoke(Library $library)
     {
         return new JsonResponse([
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Action/HomeController.php',
-            'book' => $this->book,
+            'book' => $library->takeBook(),
         ]);
     }
 
     /**
      * @Route("/html", name="home_html")
      *
+     * @param Profiler $profiler
      * @throws \InvalidArgumentException
+     *
+     * @return Response
      */
-    public function indexAction(): Response
+    public function indexAction(Profiler $profiler): Response
     {
         $response = new Response('<html><body>Welcome to the HTML controller!</body></html>');
 
-        ['token' => $token] = $this->profiler->find('', '', 1, '', '', '')[0];
-        $profile = $this->profiler->loadProfile($token);
+        ['token' => $token] = $profiler->find('', '', 1, '', '', '')[0];
+        $profile = $profiler->loadProfile($token);
 
         dump($token);
         dump($profile);
