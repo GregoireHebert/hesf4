@@ -2,6 +2,7 @@
 
 namespace App\Action;
 
+use App\Menu\MenuManager;
 use App\Services\Library;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,12 +29,16 @@ class Home
      * @Route("/html", name="home_html")
      *
      * @param Profiler $profiler
+     * @param MenuManager $menuManager
      * @throws \InvalidArgumentException
      *
      * @return Response
      */
-    public function indexAction(Profiler $profiler): Response
+    public function indexAction(Profiler $profiler, MenuManager $menuManager): Response
     {
+        $menu = $menuManager->getMenu();
+        dump($menu);
+
         $response = new Response('<html><body>Welcome to the HTML controller!</body></html>');
 
         ['token' => $token] = $profiler->find('', '', 1, '', '', '')[0];
