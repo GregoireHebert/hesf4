@@ -44,5 +44,13 @@ services:
     networks:
       - frontend
 
+  sqliteweb:
+    image: tomdesinto/sqliteweb
+    ports:
+      - 8080:8080
+    volumes:
+      - ./var/data.db:/db/my_database.db
+    command: my_database.db
+
 networks:
   frontend: ~

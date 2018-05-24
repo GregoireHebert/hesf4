@@ -1,17 +1,26 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        webservice:
-            id: App\security\MyUserProvider
+#        webservice:
+#            id: App\security\MyUserProvider
+
+        db_provider:
+            entity:
+                class: App\Entity\User
+                property: username
 
     encoders:
-        App\Entity\User: bcrypt
+        App\Entity\User: plaintext
 
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            pattern:    ^/
+            http_basic: ~
+            provider: db_provider
+
             anonymous: ~
             logout: ~
 

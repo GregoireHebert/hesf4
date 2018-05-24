@@ -34,6 +34,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     {
         return [
             'token' => $request->headers->get('X-AUTH-TOKEN'),
+            'key' => $request->headers->get('X-AUTH-KEY'),
         ];
     }
 
@@ -42,7 +43,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         $apiKey = $credentials['token'];
 
         if (null === $apiKey) {
-            return;
+            return null;
         }
 
         // if a User object, checkCredentials() is called
@@ -51,7 +52,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return true;
+        return $credentials['key'] === $user->getPassword();
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
