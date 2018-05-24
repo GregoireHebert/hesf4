@@ -7,7 +7,7 @@ security:
         db_provider:
             entity:
                 class: App\Entity\User
-                property: username
+#                property: username
 
     encoders:
         App\Entity\User: plaintext

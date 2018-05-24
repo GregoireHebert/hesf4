@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=UserRepository::class)
  *
  * @author Grégoire Hébert <gregoire@les-tilleuls.coop>
  */
