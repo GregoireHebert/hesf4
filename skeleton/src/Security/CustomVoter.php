@@ -7,11 +7,19 @@ namespace App\Security;
 use App\Entity\User;
 use App\Services\Library;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class CustomVoter extends Voter
 {
     public const CRITERIA = 'criteriaOfSuccess';
+
+    private $decisionManager;
+
+    public function __construct(AccessDecisionManagerInterface $decisionManager)
+    {
+        $this->decisionManager = $decisionManager;
+    }
 
     protected function supports($attribute, $subject)
     {
@@ -41,6 +49,6 @@ class CustomVoter extends Voter
         /** @var Library $library */
         $library = $subject;
 
-        return $user->getUsername() === $library->getOwner();
+        return $user->getUsername() === $library->getOwner() && $this->decisionManager->decide($token, ['ROLE_SUPER_ADMIN']);
     }
 }

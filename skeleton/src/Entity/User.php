@@ -81,7 +81,7 @@ class User implements UserInterface
 
     public function getRoles(): array
     {
-        return ['ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH'];
+        return ['ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH', 'ROLE_SUPER_ADMIN'];
     }
 
     /**
