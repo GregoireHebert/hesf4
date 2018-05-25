@@ -19,13 +19,14 @@ class Home
      * @param UserInterface $user
      * @return JsonResponse
      */
-    public function __invoke(Library $library, UserInterface $user)
+    public function __invoke(Request $request, Library $library, UserInterface $user)
     {
         return new JsonResponse([
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Action/HomeController.php',
             'book' => $library->takeBook(),
             'user' => $user->getUsername(),
+            'session UserName' => $request->getSession()->get('username'),
         ]);
     }
 

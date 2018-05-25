@@ -44,7 +44,7 @@ class User implements UserInterface
 
     public function __construct($username)
     {
-        $this->username = $username;
+        $this->setUsername($username);
     }
 
     /**
@@ -79,7 +79,7 @@ class User implements UserInterface
         $this->id = $id;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         return ['ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH'];
     }
@@ -120,7 +120,7 @@ class User implements UserInterface
     {
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 }
