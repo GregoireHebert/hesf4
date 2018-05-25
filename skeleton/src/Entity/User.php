@@ -36,9 +36,31 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @var \DateTimeImmutable
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastConnexion;
+
     public function __construct($username)
     {
         $this->username = $username;
+    }
+
+    /**
+     * @return \DateTimeImmutable
+     */
+    public function getLastConnexion(): \DateTimeImmutable
+    {
+        return $this->lastConnexion;
+    }
+
+    /**
+     * @param \DateTimeImmutable $lastConnexion
+     */
+    public function setLastConnexion(\DateTimeImmutable $lastConnexion): void
+    {
+        $this->lastConnexion = $lastConnexion;
     }
 
     /**

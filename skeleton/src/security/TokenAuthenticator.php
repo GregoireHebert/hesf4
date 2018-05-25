@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\security;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,19 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    /**
+     * @param EntityManagerInterface $em
+     */
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     public function start(Request $request, AuthenticationException $authException = null)
     {
         $data = [
@@ -52,7 +66,16 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return $credentials['key'] === $user->getPassword();
+        if ($credentials['key'] === $user->getPassword()) {
+
+            $user->setLastConnexion(new \DateTimeImmutable());
+            $this->em->flush();
+
+            $this->em->refresh($user);
+            return true;
+        }
+
+        return false;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
