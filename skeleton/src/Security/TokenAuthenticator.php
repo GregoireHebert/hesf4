@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\security;
+namespace App\Security;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

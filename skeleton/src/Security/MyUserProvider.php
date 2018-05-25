@@ -1,6 +1,6 @@
 <?php
 
-namespace App\security;
+namespace App\Security;
 
 use App\Entity\User;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;

@@ -3,7 +3,9 @@
 namespace App\Action;
 
 use App\Menu\MenuManager;
+use App\Security\CustomVoter;
 use App\Services\Library;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,7 +13,7 @@ use Symfony\Component\HttpKernel\Profiler\Profiler;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class Home
+class Home extends Controller
 {
     /**
      * @Route("/", name="home")
@@ -21,6 +23,8 @@ class Home
      */
     public function __invoke(Request $request, Library $library, UserInterface $user)
     {
+        $this->denyAccessUnlessGranted(CustomVoter::CRITERIA, $library);
+
         return new JsonResponse([
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Action/HomeController.php',

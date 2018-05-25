@@ -32,4 +32,9 @@ class Library
 
         return $book;
     }
+
+    public function getOwner()
+    {
+        return 'customer';
+    }
 }

@@ -27,7 +27,7 @@ security:
 
             guard:
                 authenticators:
-                    - App\security\TokenAuthenticator
+                    - App\Security\TokenAuthenticator
 
             switch_user: true
             # activate different ways to authenticate
