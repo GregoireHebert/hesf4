@@ -7,12 +7,19 @@ namespace App\Security;
 use App\Entity\User;
 use App\Services\Library;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class CustomVoter extends Voter
+class OtherCustomVoter extends Voter
 {
     public const CRITERIA = 'criteriaOfSuccess';
 
+    private $decisionManager;
+
+    public function __construct(AccessDecisionManagerInterface $decisionManager)
+    {
+        $this->decisionManager = $decisionManager;
+    }
 
     protected function supports($attribute, $subject)
     {
@@ -38,10 +45,6 @@ class CustomVoter extends Voter
             return false;
         }
 
-        // you know $subject is a Post object, thanks to supports
-        /** @var Library $library */
-        $library = $subject;
-
-        return $user->getUsername() === $library->getOwner();
+        return $this->decisionManager->decide($token, ['ROLE_SUPER_ADMIN']);
     }
 }
