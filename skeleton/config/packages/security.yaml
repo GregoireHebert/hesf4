@@ -16,6 +16,7 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
         main:
             pattern:    ^/
             http_basic: ~
@@ -28,6 +29,7 @@ security:
                 authenticators:
                     - App\security\TokenAuthenticator
 
+            switch_user: true
             # activate different ways to authenticate
 
             # http_basic: true
