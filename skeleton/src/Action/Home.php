@@ -33,29 +33,29 @@ class Home extends Controller
             'session UserName' => $request->getSession()->get('username'),
         ]);
     }
-
-    /**
-     * @Route("/html", name="home_html")
-     *
-     * @param Profiler $profiler
-     * @param MenuManager $menuManager
-     * @throws \InvalidArgumentException
-     *
-     * @return Response
-     */
-    public function indexAction(Profiler $profiler, MenuManager $menuManager): Response
-    {
-        $menu = $menuManager->getMenu();
-        dump($menu);
-
-        $response = new Response('<html><body>Welcome to the HTML controller!</body></html>');
-
-        ['token' => $token] = $profiler->find('', '', 1, '', '', '')[0];
-        $profile = $profiler->loadProfile($token);
-
-        dump($token);
-        dump($profile);
-
-        return $response;
-    }
+//
+//    /**
+//     * @Route("/html", name="home_html")
+//     *
+//     * @param Profiler $profiler
+//     * @param MenuManager $menuManager
+//     * @throws \InvalidArgumentException
+//     *
+//     * @return Response
+//     */
+//    public function indexAction(Profiler $profiler, MenuManager $menuManager): Response
+//    {
+//        $menu = $menuManager->getMenu();
+//        dump($menu);
+//
+//        $response = new Response('<html><body>Welcome to the HTML controller!</body></html>');
+//
+//        ['token' => $token] = $profiler->find('', '', 1, '', '', '')[0];
+//        $profile = $profiler->loadProfile($token);
+//
+//        dump($token);
+//        dump($profile);
+//
+//        return $response;
+//    }
 }
