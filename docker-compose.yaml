@@ -1,0 +1,69 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      # Comment out the next line in production
+      - ./:/srv/app:rw
+      # If you develop on Linux, comment out the following volumes to just use bind-mounted project directory from host
+#      - /srv/app/var/
+#      - /srv/app/var/cache/
+#      - /srv/app/var/logs/
+#      - /srv/app/var/sessions/
+    networks:
+      - frontend
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.nginx
+    depends_on:
+      - app
+    links:
+      - app
+    volumes:
+      # Comment out the next line in production
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./public:/srv/app/public:ro
+    ports:
+      - '81:80'
+    networks:
+      - frontend
+
+  varnish:
+    build:
+      context: .
+      dockerfile: Dockerfile.varnish
+    depends_on:
+      - nginx
+      - app
+    links:
+      - nginx
+      - app
+    # Comment out this volume in production
+    volumes:
+      - ./docker/varnish/conf:/etc/varnish:ro
+    ports:
+      - "80:80"
+    networks:
+      - frontend
+
+  blackfire:
+    image: blackfire/blackfire
+    environment:
+      BLACKFIRE_CLIENT_ID: 51df31fa-b4c9-4bec-83c3-ade4fd28abc6
+      BLACKFIRE_CLIENT_TOKEN: 459047ccf01886a1a7ef84fcd5007d8a7e6bb8030286774ab3ddaa74a450ac37
+      BLACKFIRE_SERVER_ID: 6aea1ba3-4717-4b1e-815e-7baaa6300aab
+      BLACKFIRE_SERVER_TOKEN: 427a34e78b3ae7c1b71db61b36bb2429b4d4d976a0bf37c5e8abb0e2b3dc5626
+    ports:
+      - '8707:8707'
+    links:
+      - 'nginx'
+    networks:
+      - frontend
+
+
+networks:
+  frontend: ~

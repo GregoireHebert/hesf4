@@ -1,0 +1,9 @@
+<html>
+    <head></head>
+    <body>
+        All this text should be put in cache<br/>
+
+        this should change every 10 sec : {{ render(controller('App\\Action\\Cache::dyn')) }}<br>
+        this should change every 5 sec : {{ render_esi(controller('App\\Action\\Cache::dyn')) }}
+    </body>
+</html>
