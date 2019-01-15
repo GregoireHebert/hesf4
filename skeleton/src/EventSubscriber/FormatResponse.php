@@ -32,8 +32,8 @@ class FormatResponse implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => 'response',
-            KernelEvents::RESPONSE => 'type'
+//            KernelEvents::VIEW => 'response',
+//            KernelEvents::RESPONSE => 'type'
         ];
     }
 
