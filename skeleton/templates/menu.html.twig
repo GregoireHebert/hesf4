@@ -1,0 +1,8 @@
+<html>
+    <head></head>
+    <body>
+        {% for link in menu %}
+            <li><a href="{{ link.route }}" target="{{ link.target }}">{{ link.label }}</a></li>
+        {% endfor %}
+    </body>
+</html>

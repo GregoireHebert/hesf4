@@ -13,10 +13,8 @@ class Home
 {
     /**
      * @Route("/", name="home")
-     * @param Library $library
-     * @return JsonResponse
      */
-    public function __invoke(Library $library)
+    public function __invoke(Library $library): JsonResponse
     {
         return new JsonResponse([
             'message' => 'Welcome to your new controller!',
