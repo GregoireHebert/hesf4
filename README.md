@@ -1,8 +1,8 @@
 3 plugins : 
 
-Docker
-PHPDocker
-PHP remote interpreter
+Docker  
+PHPDocker  
+PHP remote interpreter  
 
 Ouvrez la fenêtre des paramètres phpStorm (ctrl+alt+s ou File/Settings/…)
 Allez dans l’onglet Build, execution, deployment
