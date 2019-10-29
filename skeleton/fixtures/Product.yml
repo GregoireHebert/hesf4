@@ -1,0 +1,35 @@
+App\Entity\Product:
+  bigmac:
+    name: BigMac
+    price: 599
+    category: burger
+
+  cbo:
+    name: CBO
+    price: 699
+    category: burger
+
+  dailyburger:
+    name: Burger du moment
+    price: 799
+    category: burger
+
+  coca:
+    name: Coca
+    price: 199
+    category: drink
+
+  sprite:
+    name: Sprite
+    price: 199
+    category: drink
+
+  orangina:
+    name: Orangina
+    price: 199
+    category: drink
+
+  fries:
+    name: Fries
+    price: 100
+    category: side
