@@ -1,5 +1,5 @@
 FROM composer:1.5
-FROM php:7.1-fpm-alpine
+FROM php:7.2-fpm-alpine
 
 ENV PHP_XDEBUG_DEFAULT_ENABLE ${PHP_XDEBUG_DEFAULT_ENABLE:-1}
 ENV PHP_XDEBUG_REMOTE_ENABLE ${PHP_XDEBUG_REMOTE_ENABLE:-1}
@@ -39,11 +39,11 @@ RUN set -xe \
 COPY docker/app/xdebug.ini /usr/local/etc/php/conf.d/xdebug-dev.ini
 
 # Add blackfire probe agent
-RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
-    && curl -A "Docker" -o /tmp/blackfire.so -D - -L -s https://packages.blackfire.io/binaries/blackfire-php/1.20.0/blackfire-php-alpine_amd64-php-71.so \
-    && mv /tmp/blackfire.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-    && chmod 755 $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini
+#RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+#    && curl -A "Docker" -o /tmp/blackfire.so -D - -L -s https://packages.blackfire.io/binaries/blackfire-php/1.20.0/blackfire-php-alpine_amd64-php-71.so \
+#    && mv /tmp/blackfire.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+#    && chmod 755 $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+#    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini
 
 COPY docker/app/php.ini /usr/local/etc/php/php.ini
 COPY --from=0 /usr/bin/composer /usr/bin/composer

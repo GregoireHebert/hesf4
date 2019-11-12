@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Commands;
 
 use App\Entity\PlacedOrder;
+use App\Events\PlacedOrderEvent;
 use App\Exceptions\ProductNotFoundException;
 use App\MenuBuilder\MenuBuilder;
 use App\Repository\PlacedOrderRepository;
@@ -21,20 +22,32 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class McDoCommand extends Command
 {
     private $menuBuilder;
     private $placedOrderRepository;
     private $productRepository;
+    private $validator;
+    private $eventDispatcher;
 
-    public function __construct(MenuBuilder $menuBuilder, PlacedOrderRepository $placedOrderRepository, ProductRepository $productRepository)
-    {
+    public function __construct(
+        MenuBuilder $menuBuilder,
+        PlacedOrderRepository $placedOrderRepository,
+        ProductRepository $productRepository,
+        ValidatorInterface $validator,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         parent::__construct();
 
         $this->menuBuilder = $menuBuilder;
         $this->placedOrderRepository = $placedOrderRepository;
         $this->productRepository = $productRepository;
+        $this->validator = $validator;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     protected function configure()
@@ -59,10 +72,27 @@ class McDoCommand extends Command
             return;
         }
 
-        if (null !== $order = $this->askForOrder($input, $output)) {
+        if ((null !== $order = $this->askForOrder($input, $output)) && $this->validate($order, $io)) {
             $this->placedOrderRepository->persistAndSave($order);
-            $io->success(sprintf('Order N° %s placed. Thank you!', $order->getNumber()));
+            $event = new PlacedOrderEvent($order);
+            $this->eventDispatcher->dispatch($event);
+            $io->success(sprintf('Order N° %s placed. Thank you!', $event->getOrder()->getNumber()));
         }
+    }
+
+    private function validate(PlacedOrder $order, SymfonyStyle $io)
+    {
+        $constraintViolationList = $this->validator->validate($order);
+        if ($constraintViolationList->count()) {
+            /** @var ConstraintViolation $constraintViolation */
+            foreach ($constraintViolationList as $constraintViolation) {
+                $io->error($constraintViolation->getPropertyPath(). ': '.$constraintViolation->getMessage());
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     private function showMenu(OutputInterface $output)
@@ -128,7 +158,7 @@ class McDoCommand extends Command
             $burger = $questionHelper->ask($input, $output, $burgerChoice);
             $quantity = (int) $questionHelper->ask($input, $output, $howManyQuestion);
 
-            $this->menuBuilder->addSelection($burger, $quantity);
+            $this->menuBuilder->addSelection((string) $burger, $quantity);
         } while ($questionHelper->ask($input, $output, $moreQuestion));
 
         // sides
@@ -136,7 +166,7 @@ class McDoCommand extends Command
             $side = $questionHelper->ask($input, $output, $sideChoice);
             $quantity = (int) $questionHelper->ask($input, $output, $howManyQuestion);
 
-            $this->menuBuilder->addSelection($side, $quantity);
+            $this->menuBuilder->addSelection((string) $side, $quantity);
         } while ($questionHelper->ask($input, $output, $moreQuestion));
 
         // drinks
@@ -144,7 +174,7 @@ class McDoCommand extends Command
             $drink = $questionHelper->ask($input, $output, $drinkChoice);
             $quantity = (int) $questionHelper->ask($input, $output, $howManyQuestion);
 
-            $this->menuBuilder->addSelection($drink, $quantity);
+            $this->menuBuilder->addSelection((string) $drink, $quantity);
         } while ($questionHelper->ask($input, $output, $moreQuestion));
 
         // forgot something?

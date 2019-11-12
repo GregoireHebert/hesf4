@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Total</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+                    <tr>
+                        <th scope="row">{{ order.number }}</th>
+                        <td>{{ order.name }}</td>
+                        <td><span class="badge badge-{{ order|orderColor }}">{{ order.status }}</span></td>
+                        <td>{{ order.roundedTotal|localizedcurrency('EUR') }}</td>
+                        <td><a href="{{ path('orders_get_item', {'id': order.number}) }}" class="btn btn-primary">voir</a></td>
+
+                    </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

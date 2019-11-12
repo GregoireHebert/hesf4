@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-4"><h1><span class="badge badge-secondary">#{{ order.number }}</span></h1></div>
+            <div class="col-4">
+                <div class="dropdown">
+                    <button class="btn btn-{{ order|orderColor }} dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ order.status }}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="{{ path('orders_item_switch_status', { id: order.number, status: 'Ready' }) }}">Ready</a>
+                        <a class="dropdown-item" href="{{ path('orders_item_switch_status', { id: order.number, status: 'Taken' }) }}">Taken</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for selection in order.selections %}
+                    <tr>
+                        <td>{{ selection.product.name }}</td>
+                        <td>{{ selection.product.roundedPrice|localizedcurrency('EUR') }}</td>
+                        <td>x{{ selection.quantity }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <a href="{{ path('orders') }}" class="btn btn-primary" role="button">Retour</a>
+        </div>
+    </div>
+{% endblock %}

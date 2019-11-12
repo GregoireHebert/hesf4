@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-final class Product
+class Product
 {
     /**
      * @ORM\Id()
@@ -56,6 +56,11 @@ final class Product
     public function getPrice(): ?int
     {
         return $this->price;
+    }
+
+    public function getRoundedPrice(): float
+    {
+        return $this->price/100;
     }
 
     public function setPrice(int $price): void
